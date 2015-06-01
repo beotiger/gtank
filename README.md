@@ -17,7 +17,7 @@ There are several:
 In order to play G-Tank you need any .EDD image (external RAM for Vector06C) to be inserted into emulator.
 If you start G-Tank with LCtrl+RCtrl in Virtual Vector (US+RUS/LAT in Vector's terms) you will get possibility to start any level 1..16 and will have 10 lives and full armor.
 
-## Download archive with a game and sources from here: http://beotiger.com/download/gtank
+### Download archive with a game and sources from here: http://beotiger.com/download/gtank
 
 This archive includes system.fdd to start system and reserved.edd - EDD image to insert into emulator.
 gtank.fdd includes game G-Tank (GT.COM), level editor for G-Tank (GTE.COM), several utilities and sources for G-Tank, which you will find here also.
@@ -27,18 +27,16 @@ gtank.fdd includes game G-Tank (GT.COM), level editor for G-Tank (GTE.COM), seve
  <img src="http://beotiger.com/inc/scr/gtank0scr.jpg" alt="MAN0_SCR">
 </p>
 
-## More screenshots see below, after Russian description.
+### More screenshots see below, after Russian description.
 
-= ==============================================
-= ===================  RUS  ====================
-= ==============================================
+# RUS
 
-# G-Tank: игра для советского персонального компьютера "Вектор-06Ц", который использует процессор КР580ВМ80А, аналог i8080.
+### G-Tank: игра для советского персонального компьютера "Вектор-06Ц", который использует процессор КР580ВМ80А, аналог i8080.
 
 Здесь вы найдёте полные исходники игры на ассемблере i8080.
 Их можно скомпилировать с помощью M80 - Microsoft Macro Assembler для CP/M, и слинковать с помощью L80M - линкера для CP/M от той же компании Microsoft.
 
-Для использования потребуется эмулятор "Вектора-06Ц", например:
+Для использования потребуется эмулятор "Вектор-06Ц", например:
 
 1. Virtual Vector от Игоря Титаря - http://asdasd.rpg.fi/~svo/virtualvector - наверное лучший сейчас.
 2. Башкирия - http://bashkiria-2m.narod.ru/ - эмулирует Башкирию, так же есть режим эмуляции "Вектор-06Ц" (Vector-06C).
@@ -62,7 +60,7 @@ Some screenshots
  <img src="http://beotiger.com/inc/scr/gtank2scr.jpg" alt="PITON0_SCR">
 </p>
 <p>
- <h4>G-tank adventure</h4>
+ <h4>G-Tank adventure</h4>
  <img src="http://beotiger.com/inc/scr/gtank3scr.jpg" alt="DEMOTEST_SCR">
 </p>
 <p>
