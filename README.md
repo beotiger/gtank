@@ -45,12 +45,12 @@ gtank.fdd includes game G-Tank (GT.COM), level editor for G-Tank (GTE.COM), seve
 Для игры в G-Tank надо использовать любой образ .EDD, так как игра сохраняет инфо об уровне на нём.
 Если Вы стартуете игру с нажатыми УС+РУС/ЛАТ (например LCtrl+RCtrl в Virtual Vector), вы получите доступ ко всем 16-ти уровням, а также будете начинать игру с 10 жизнями и полной бронёй.
 
-Архив с игрой и с исходниками можно скачать отсюда: http://beotiger.com/download/gtank.zip
+Архив с игрой и с исходниками можно скачать отсюда: http://beotiger.com/download/gtank
 Туда также включен образ системы system.fdd и reserved.edd в качестве образа EDD для игры в G-Tank.
 Образ gtank.fdd помимо старых исходников включает саму игру (GT.COM) и редактор уровней к ней (GTE.COM), а также несколько утилит и сами исходники, которые представлены здесь.
 
 
-Some screenshots
+## Some screenshots
 <p>
  <h4>G-Tank intro screen</h4>
  <img src="http://beotiger.com/inc/scr/gtank1scr.jpg" alt="MAN0_SCR">
