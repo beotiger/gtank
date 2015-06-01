@@ -1,0 +1,343 @@
+;
+;  INPUT.LIB - Библиотека ввода и преобразования информации
+;   требует: APINIT.LIB, GRAPH.LIB, MATH.LIB
+; включает в себя на 4 января 2000рХ :
+;  mINPUT - ВВОД СТРОКИ В БУФЕР
+;  mDECI  - преобразования строки цифр из буфера в
+;	    десятичное число
+
+mINPUT MACRO
+; вход: DE - адрес строки, HL - курсор(0-31)
+;       B - максимальнаЯя длина строки, С - цвет
+;       A - текущее положение курсора
+	LOCAL INP00,INP0,INP1,INP2,INP20,INP30
+	LOCAL INP3,INP4,INP5,INP6,INP7,INP60
+	LOCAL INP61,INP31,INP51
+	LOCAL PRINTIT,PUTCUR,DELCUR,PRI0
+INP00:	STA TIMCUR
+INP0:	CALL PRINTIT
+	CALL PUTCUR
+	LPAUSE
+	HLT
+	HLT
+	HLT
+	WAITKEY
+	PUSH PSW
+	CALL DELCUR
+	IN 1
+	ANI 40H
+	JNZ $+6
+	POP PSW
+	STC  ; признак нажатой УС
+	RET
+
+	POP PSW
+
+	CPI DOM
+	JNZ $+7
+	XRA A
+	JMP INP00
+	CPI RIGHT
+	JNZ INP1
+	LDA TIMCUR
+	INR A
+	CMP B
+	JNC INP0
+	JMP INP00
+INP1:	CPI LEFT
+	JNZ INP2
+	LDA TIMCUR
+	DCR A
+	JM INP0
+	JMP INP00
+INP2:	CPI ZB
+	JNZ INP3
+	LDA TIMCUR
+	DCR A
+	JM INP0
+	STA TIMCUR
+	PUSHA
+	MOV C,A
+	ADD E
+	MOV E,A
+	JNC $+4
+	INR D
+	MOV H,D
+	MOV L,E
+	MOV A,B
+	SUB C
+	DCR A
+	MOV C,A
+INP20:	INX D
+	LDAX D
+	MOV M,A
+	INX H
+	DCR C
+	JNZ INP20
+	MVI M,20H
+	POPA
+	JMP INP0
+INP3:	CPI F2
+	JNZ INP4
+	LDA TIMCUR
+	PUSHA
+	MOV C,A
+	ADDDE
+	XCHG
+	MVI M,20H
+	MOV A,C
+	INR A
+	SUB B
+	JNC INP31    ; все, если последний символ
+	CMA
+	INR A
+	MOV D,H
+	MOV E,L
+	MOV B,A
+INP30:	INX D
+	LDAX D
+	MOV M,A
+	INX H
+	DCR B
+	JNZ INP30
+	MVI M,20H
+INP31:	POPA
+	JMP INP0
+INP4:	CPI STR
+	JNZ $+14
+	LDA KEYPAD
+	XRI 1
+	STA KEYPAD
+	JMP INP0
+	CPI F5
+	JNZ $+14
+	LDA KEYPAD
+	XRI 4
+	STA KEYPAD
+	JMP INP0
+
+	CPI 40H  ; SPACE BAR?
+	JNZ INP5
+	MVI A,20H
+	JMP INP6
+INP5:	CPI 11H
+	CMC
+	RNC
+	ADI 31  ; TRANSFORM CODE INTO ASCII (0-@,A-Z)
+	CPI 64  ; выбираем сразу '0'-'?'
+	JC INP51
+	PUSH B
+	MOV C,A
+	LDA KEYPAD
+	ANI 4   ; выделяем d2
+	MOV A,C
+	POP B
+	JZ $+5 ; БОЛЬШИЕ БУКВЫ (КАК ЭТИ)
+	ADI 32
+	PUSH B
+	MOV C,A
+	LDA KEYPAD
+	ANI 2
+	MOV A,C
+	POP B
+	JZ INP6
+	ORI 80H
+INP6:	PUSHA
+	MOV C,A
+	LDA KEYPAD
+	RRC
+	LDA TIMCUR
+	JC INP7
+
+	MOV H,D
+	MOV L,E  ; HL = DE
+	PUSH PSW
+	ADDHL
+	POP PSW
+	INR A
+	CMP B
+	JNC INP60
+	STA TIMCUR
+	SUB B
+	CMA
+	INR A
+	PUSH PSW
+	MOV A,B
+	ADDDE
+	DCX D
+	MOV H,D
+	MOV L,E
+	POP PSW
+	MOV B,A
+INP61:	DCX D
+	LDAX D
+	MOV M,A
+	DCX H
+	DCR B
+	JNZ INP61
+INP60:	MOV M,C
+	POPA
+	JMP INP0
+INP7:	MOV L,A
+	ADDDE
+	MOV A,C
+	STAX D
+	MOV A,L
+	POPA
+	INR A
+	CMP B
+	JNC INP0
+	JMP  INP00
+INP51:	PUSH B
+	MOV C,A
+	IN 1
+	ANI 20H ; CC IST?
+	MOV A,C
+	POP B
+	JNZ INP6
+	SUI 16
+	JMP INP6
+	
+TIMCUR:	DB 0   ; текущее положение курсора в редактируемой
+	       ; строке
+
+PRINTIT:
+	PUSHA
+	MOV A,C
+	CALL CHARCOLOR
+PRI0:	LDAX D
+	CALL PUTUCHAR
+	INR H
+	INX D
+	DCR B
+	JNZ PRI0
+	POPA
+	RET
+PUTCUR:
+	MVI A,10H
+	JMP $+4
+DELCUR:	XRA A	
+	PUSHA
+	ORA C
+	CALL CHARCOLOR
+	LDA TIMCUR
+	MOV C,A
+	ADD H
+	MOV H,A
+	MOV A,C
+	ADDDE
+	LDAX D
+	CALL PUTUCHAR ;ВЫВОД СИМВОЛА ИЗ GRAPH.LIB
+	POPA
+	RET
+	ENDM
+
+DECI MACRO BUFFER
+; вход- DE - адрес буфера для входного преобразования
+; выход - DE - десятичное, мать его, число
+	LOCAL DECI0,DECEND
+	JMP DECEND
+@DECI:	LXI H,0
+	XCHG
+DECI0:	MOV A,M
+	INX H
+	SUI 30H
+	RC   ;ЧИСЛА 80H+30H+10  ТОЖЕ МОГУТ
+	CPI 10  ; НАХОДИТЬСЯ В ЛИСТИНГЕ
+	RNC     ;ЭТО ВАМ НЕ  КОИ-7
+	MOV C,A
+	MVI B,0
+	PUSH H
+	MOV H,D
+	MOV L,E
+	DAD H
+	DAD H
+	DAD D
+	DAD H
+	DAD B
+	XCHG
+	POP H
+	JMP DECI0
+DECEND:
+DECI	MACRO ?BUFFER
+	IF NOT NUL ?BUFFER
+	LXI D,?BUFFER
+	ENDIF
+	CALL @DECI
+	ENDM
+	DECI BUFFER
+	ENDM
+
+HEXI	MACRO BUFFER
+;ТО ЖЕ ДЕЛАЕМ ДЛЯ ШЕСТНАДЦАТИРИЧНОГО ПРЕОБРАЗОВАНИЯ
+	LOCAL @HEXIEND,@HEXI1,@HOKEY
+	JMP @HEXIEND
+@HEXI:
+	LXI H,0
+	MOV B,L
+@HEXI1:
+	XCHG
+	MOV A,M
+	INX H
+	SUI 30H
+	RC
+	CPI 10
+	JC @HOKAY
+	SUI 7 ;FOR 'A'-'F'
+	CPI 10
+	RC
+	CPI 10H
+	RNC
+@HOKAY:	MOV C,A
+	XCHG
+	DAD H
+	DAD H ;*4
+	DAD H
+	DAD H ;*10H
+	DAD B ;+BC
+	JMP @HEXI1
+@HEXIEND:
+HEXI	MACRO ?BUFFER
+	IF NOT NUL ?BUFFER
+	LXI D,?BUFFER
+	ENDIF
+	CALL @HEXI
+	ENDM
+	HEXI BUFFER
+	ENDM
+
+BYNI	MACRO BUFFER
+;ДЛЯ ПОЛНОТЫ ОПИСАНИЯ НЕ ХВАТАЕТ
+;ЛИШЬ OCTI, НО ЕЕ СДЕЛАТЬ ПРОЩЕ,
+; ЧЕМ ВСЕ ОСТАЛЬНЫЕ
+; 1.ПРОВЕРИТЬ ВЫХОД ЗА СИМВОЛ '0'-'7'
+; 2.ПРЕОБРАЗОВАТЬ В ЧИСЛО 0-7
+; 3.УМНОЖИТЬ РЕЗУЛЬТАТ НА 8 И ПРИБАВИТЬ
+;   ВВЕДЕННОЕ С БУФЕРА ЧИСЛО
+; 4.ПОВТОРЯТЬ ПОКА НЕ КОНЕЦ ЧИСЛА В БУФЕРЕ
+;
+	LOCAL @BYNEND,@BYN1
+	JMP @BYNEND
+@BYNI:
+	LXI H,0
+@BYN1:	XCHG
+	MOV A,M
+	INX H
+	SUI 30H
+	RC
+	CPI 2
+	RNC
+	XCHG
+	DAD H
+	ORA L
+	MOV L,A
+	JMP @BYN1
+@BYNEND:
+BYNI	MACRO ?BUFFER
+	IF NOT NUL ?BUFFER
+	LXI D,?BUFFER
+	ENDIF
+	CALL @BYNI
+	ENDM
+	BYNI BUFFER
+	ENDM

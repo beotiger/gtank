@@ -1,0 +1,282 @@
+	MSX.M-80 1.00	01-Apr-85	PAGE	1
+
+
+                                ;///////// G - T A N K \\\\\\\\\\\\\\\\\
+                                ; 	osnownoj fajl prOekta G-TANK
+                                ; GT.ASM - sbor}ik wseh modulej,  na~alo,prowerka
+                                ;	DISPATCHER  OF  <HER MAJESTY GAME>
+                                ;	CREATED BY  gDw
+                                ; podawim wyda~u listinga (.PRN)
+	MSX.M-80 1.00	01-Apr-85	PAGE	S
+
+
+Macros:
+ADDDE           ADDHL           CMPHD           LDAD            LDAI            
+LDIR            LODSB           LOOP            LPAUSE          MOVSB           
+NEG             POPA            PUSHA           RND             ROL             
+ROR             STAI            STARTPLAY       STOPPLAY        STOSB           
+SUBHB           SUBHD           TURBOCLS        XLAT            
+
+Symbols:
+00BC'	..0000          202D'	..0001          40A5'	..0004          
+40B1'	..0005          007F'	@CONT           0076'	@IFFREE         
+03FC'	@NO1PLAY        0443'	@NO2PLAY        0488'	@NO3PLAY        
+014B'	@NOF0           00EB'	@NOFREE         0062'	@NOQD           
+0069'	@OK             009E'	@READIT         00C8'	@RECONT         
+2003'	@RND            204D'	@RNDEND         4096'	@TC             
+0207'	ABSNOTE1        0209'	ABSNOTE2        020B'	ABSNOTE3        
+0871'	ACHAR16         39B5'	ADDEM           4064'	ADDRCTR         
+3C0E'	ADDRGOALS       01F2'	ADDRNOTE1       01F4'	ADDRNOTE2       
+01F6'	ADDRNOTE3       20D7'	ADDROBJ         3E12'	ADMENU          
+3CC6'	ADMENUS         2706'	AI0             2724'	AI00            
+26F6'	AI1PL           2771'	AI2PL           2784'	AII80           
+27AF'	AII81           27BC'	AII82           27D3'	AII83           
+2820'	AII85           283B'	AII86           2853'	AIIF5           
+2848'	AIIFIRE         286A'	AIM3            285C'	AIMAN           
+273D'	AIO1            2748'	AIO10           275C'	AIO13           
+2768'	AIO14           26CF'	AIOBJ           26E6'	AIOBJ1          
+272B'	AIOF            42BA'	ANAL            42A6'	ANAL1           
+42E1'	ANAL10          42EF'	ANAL11          42F4'	ANAL2           
+431B'	ANAL20          4320'	ANAL3           4333'	ANAL4           
+4344'	ANAL5           435E'	ANAL6           4294'	ANALYSER        
+015C'	APINIT          0016 	ARM1            0019 	ARM4            
+20E1'	ARMOR           3CAC'	AUTHOR          2140'	BASEHP          
+2174'	BASEX           2175'	BASEY           3523'	BEART1          
+3500'	BEART8          35BE'	BEART9          3504'	BEARTANKS       
+01F8'	BEGNOTE1        01FA'	BEGNOTE2        01FC'	BEGNOTE3        
+477B'	BILMUS          4093'	BOARD           20ED'	BONOBJ          
+01D6'	BORDER          35C2'	BPCHECK         2088'	BPXY            
+419D'	BRD0            40FF'	BRD1            4105'	BRD2            
+41B9'	BRD3            421A'	BRDK1           4244'	BRDK3           
+4215'	BRDKEY          41DC'	BRDN            41E3'	BRDN0           
+41E7'	BRDN1           41EB'	BRDN2           41F1'	BRDN4           
+40D6'	BRDX0           2D93'	BREAKSTWALL     334C'	BREAKTANK       
+2E21'	CAM2            2E28'	CAM5            2E2C'	CAM6            
+2E3A'	CAM7            2DB7'	CATCHFLAG       2DA7'	CATCHSTAR       
+2DC6'	CATFL4          2DC7'	CATFL5          214B'	CFLAG           
+049E'	CHAN1OFF        04BC'	CHAN1ON         04A7'	CHAN2OFF        
+04CE'	CHAN2ON         04B0'	CHAN3OFF        04E0'	CHAN3ON         
+406A'	CHANGECTR       0C10'	CHARCOLOR       3175'	CHB5            
+0C22'	CHC1            0CD0'	CHCOLOR         312C'	CHECKBULL       
+2ADE'	CHECKE          2AAE'	CHECKEDGE       2FAE'	CHECKMAN        
+2D4C'	CHECKMAP        2ADA'	CHECKN          36EC'	CHECKPOSITION   
+2AE3'	CHECKW          2AC5'	CHED1           0003 	CHEREP          
+0010 	CHESS           0CC8'	CHHEIGHT        2D85'	CHM5            
+2FD3'	CHMAN5          3712'	CHP6            3708'	CHP7            
+246B'	CLEAROBJ        4273'	CLEARQD         4285'	CLQD1           
+2471'	CLRO1           216E'	CMAN            215D'	CMINE           
+2484'	COB0            01D9'	COLR0           01E8'	COLR15          
+	MSX.M-80 1.00	01-Apr-85	PAGE	S-1
+
+
+20D6'	COLSYM          20DA'	CONDITION       287D'	CONTROLOBJ      
+247B'	COUNTOBJ        344E'	COUNTTANKS      007F 	CPRT            
+2A1B'	CREATEBULL      2D23'	CREATEEXPL      0CD8'	CRLF            
+2DFD'	CRUSHAMAN       20E6'	CSH             2154'	CSTAR           
+298A'	CT01            2967'	CTEX5           30D6'	CTRBULL         
+2940'	CTREXPL         2875'	CTRL1P          2879'	CTRL2P          
+2B08'	CTRMA4          2B0A'	CTRMA5          2AE7'	CTRMAN          
+2885'	CTROB0          28A0'	CTROB1          28FB'	CTROB2          
+29C0'	CTRTA4          29CB'	CTRTA5          29D3'	CTRTA9          
+296F'	CTRTANK         2077'	CURLEV          0C7B'	CURSOR          
+20DE'	CURX            20DF'	CURY            2146'	CWALL           
+2144'	CYCLES          3225'	DEBU1           0AB3'	DEL16X16        
+0AE3'	DEL16X16D       0AE4'	DEL16X16U       3FF9'	DEL2PL          
+267D'	DEL8FRMAP1      09EC'	DEL8X8          0A0F'	DEL8X8X         
+329C'	DELBRICK        320B'	DELBULL         26BE'	DELFRMAP        
+2642'	DELFRMAP1       24BF'	DELSTOBJ        456C'	DELSTR          
+3337'	DELTANK         2086'	DEMLEV          20DA'	DESOBJ          
+20E0'	DIR             0D53'	DISPATCHER      21CB'	DISTANCE        
+0210'	DO              021A'	DODIEZ          0020 	DOWN            
+20E2'	DSHIFT          20EF'	DSPXY           4669'	EFBT            
+468C'	EFBW            4699'	EFCAM           46BB'	EFCF            
+4676'	EFEX            46E1'	EFF1            4711'	EFF2            
+471B'	EFF3            472F'	EFF4            474B'	EFF5            
+4757'	EFF6            476F'	EFF7            46C8'	EFSH            
+43C3'	ENDGAME         2DDC'	EXPLMINE        325F'	EXPLOBJ         
+2CD2'	EXPLTANK        0242'	FA              024C'	FADIEZ          
+2338'	FBP1            230B'	FILLBASECOOR    231A'	FILLBEARPOINT   
+3FE7'	FILLPLSTR       233A'	FILLTURRETPOINT 4450'	FIN1            
+44C1'	FIN2            33E6'	FINDBC          341C'	FINDBD          
+33F7'	FINDBY          3408'	FINDCR          2459'	FINDFREEOBJ     
+3FC9'	FINDL1          3FC6'	FINDLEVEL       2607'	FINDOBJ         
+440C'	FINITA          21DF'	FINOBJ          0008 	FIRE            
+04CB'	FIRST2MELO      04DD'	FIRST3MELO      4C2B'	FIRSTLEVEL      
+04B9'	FIRSTMELO1      7E00 	FIRSTOBJ        2143'	FLAGS           
+214C'	FLAGXY          260E'	FOB1            2622'	FOB5            
+236C'	FTP1            2375'	FTP3            0D7F'	GAME            
+2176'	GAMECON         43D3'	GAMEOVER        0D8E'	GAMEP           
+0D70'	GAMES           2177'	GAMETIM         3CCC'	GDEY            
+25F6'	GETADOBJ        05F4'	GETK0           05F9'	GETK1           
+060E'	GETK2           05F1'	GETKEY          2491'	GETMAPXY        
+2DF2'	GETTOPLEFT      45A8'	GIVBO1          45EA'	GIVBO2          
+45EE'	GIVBO3          4579'	GIVBONUS        45F3'	GIVINV          
+4619'	GIVLIFE         460F'	GIVP1           4602'	GIVPOWER        
+461D'	GIVROCK         3C16'	GOAL1           3C22'	GOAL2           
+3C2E'	GOAL3           3C39'	GOAL4           217A'	HAMODE          
+0C0F'	HEIGHT          0C8A'	HEXOUT          32D2'	HITB3           
+32BF'	HITBASE         3294'	HITBRWALL       3286'	HITBUILDING     
+32B4'	HITIRWALL       319C'	HITM2           31B3'	HITM3           
+31ED'	HITM5           3188'	HITMAN          3198'	HITME           
+31D1'	HITMN           31DF'	HITMW           323B'	HITT1           
+3257'	HITT3           3301'	HITTA1          32E8'	HITTANK         
+3229'	HITTURRET       20E2'	HP              3B11'	I0              
+3BB0'	I1              3BB5'	I2              3BBA'	I3              
+3BBF'	I4              3BC4'	I5              3BC9'	I6              
+3BCE'	I7              3BD3'	I8              3D69'	ICLEV           
+34E5'	IFM61           34F9'	IFM62           34DC'	IFMORE6         
+	MSX.M-80 1.00	01-Apr-85	PAGE	S-2
+
+
+21BB'	INCCOOR16       21AB'	INCCOORMAN      219B'	INCTANK         
+0C7A'	INFEND          2218'	INIL0           2288'	INIL1           
+228F'	INIL2           22B3'	INIL3           22B6'	INIL4           
+22EF'	INIL90          22FA'	INIL91          230A'	INIL92          
+0176'	INIT1           018A'	INIT2           0193'	INIT3           
+062D'	INITKEYS        21E7'	INITLEVEL       3FFE'	INITPLSTR       
+066A'	INK1            20D5'	JOYPU           06D6'	KEY1P           
+06D7'	KEY2P           06D8'	KEYBOARD        01CD'	KEYS            
+026A'	LA              342C'	LASTCHM         3444'	LCM2            
+0010 	LEFT            0201'	LENGTH1         0202'	LENGTH2         
+0203'	LENGTH3         207B'	LEVDIR          2063'	LEVGOAL         
+2052'	LEVNAME         2050'	LEVPTR          207A'	LEVROLL         
+4407'	LEVTAB          2062'	LEVY            2061'	LMAXY           
+4935'	M31             4966'	M32             4997'	M33             
+00F0 	MAN1            2EC9'	MANE            2EDD'	MANE2           
+2EF8'	MANE5           2E9A'	MANN            2EAC'	MANN2           
+2E72'	MANS2           2E8D'	MANS3           2F04'	MANW            
+2F16'	MANW2           2F30'	MANW5           A000 	MAP             
+C000 	MAP1            0008 	MAXBP           0018 	MAXDSP          
+206C'	MAXENEMY        2078'	MAXLEV          2064'	MAXMEN          
+0020 	MAXOBJ          0008 	MAXSTO          000F 	MAXTP           
+480C'	MEND1           485E'	MEND2           48CB'	MEND3           
+49C8'	MEND5           3FC2'	MENKPR          3CD3'	MENU            
+3D47'	MENU1           3EB7'	MENU10          3F2C'	MENU11          
+3F25'	MENU12          3DAA'	MENU2           3DD7'	MENU21          
+3DDF'	MENU22          3DF0'	MENU3           3E01'	MENU4           
+3E20'	MENU5           3E36'	MENU6           3E5C'	MENU7           
+3E76'	MENU71          3E80'	MENU72          3E91'	MENU8           
+3EAD'	MENU9           3FAB'	MENUK3          3FC0'	MENUK4          
+3F71'	MENUKEY         3C4D'	MENUS1          3C58'	MENUS2          
+3C64'	MENUS3          3C73'	MENUS4          3C82'	MENUS5          
+3C8A'	MENUS6          3C92'	MENUS7          3C9A'	MENUS8          
+3CA3'	MENUS9          0238'	MI              215E'	MINEXY          
+00AF'	MLDIR           020D'	MODE1           020E'	MODE2           
+020F'	MODE3           20E8'	MOTHERNUMBER    310A'	MOVEB1          
+3122'	MOVEB5          2E43'	MOVEMAN         26A1'	MOVEMAP1MAP     
+2B3A'	MOVETANK        3379'	MTK012          3476'	MTK013          
+2170'	NCURX           2171'	NCURY           43B5'	NELE234         
+45C8'	NEXTFT          43AB'	NEXTLEVEL       001A 	NIZ             
+2075'	NOENEMY         2734'	NOFIRE          2FDB'	NOSIT           
+0288'	NOTES           0B3C'	NUMBIT          2145'	NUMDEMON        
+4C2A'	NUMLEV          20EB'	NUMMEL          20D9'	NUMOBJ          
+2087'	NUMOFBP         20EE'	NUMOFDSP        207D'	NUMOFPL         
+211F'	NUMOFSTO        2142'	NUMOFTANKS      2098'	NUMOFTP         
+2079'	NUMTANK         01FE'	OCTAVE1         01FF'	OCTAVE2         
+0200'	OCTAVE3         3C0D'	OIF16E          0DB8'	OLD1            
+01D7'	OLD39H          20DC'	OLDX            20DD'	OLDY            
+0D1D'	OUTC2           0C37'	OUTINFO         3BF8'	OUTINFO16       
+02F2'	P1C0            02BC'	P1C0X           02F5'	P1C1            
+0300'	P1C2            03EB'	P1C5            03EF'	P1C6            
+03F7'	P1C7            0350'	P2C0            031A'	P2C0X           
+035E'	P2C2            0432'	P2C5            0436'	P2C6            
+043E'	P2C7            03AE'	P3C0            0378'	P3C0X           
+03BC'	P3C2            0477'	P3C5            047B'	P3C6            
+0483'	P3C7            2553'	PALO            252F'	PALO0           
+2525'	PALO1           256D'	PALO10          258B'	PALO2           
+	MSX.M-80 1.00	01-Apr-85	PAGE	S-3
+
+
+25B3'	PALO3           25CC'	PALO4           25DF'	PALO5           
+25EB'	PALO6           0BF9'	PCOL1           01E9'	PEREP           
+375E'	PHSCRDOWN       371B'	PHSCRUP         3764'	PHSD1           
+3769'	PHSD2           3721'	PHSU1           3726'	PHSU2           
+3743'	PHSU3           2178'	PL1BON          2080'	PL1COUNT        
+2083'	PL1CTR          0679'	PL1KEYS         207E'	PL1LIV          
+2179'	PL2BON          2081'	PL2COUNT        2084'	PL2CTR          
+068A'	PL2KEYS         207F'	PL2LIV          02AE'	PLAY1CHAN       
+0555'	PLAY1DRUM       03C8'	PLAY1NOTE       030C'	PLAY2CHAN       
+0597'	PLAY2DRUM       0412'	PLAY2NOTE       036A'	PLAY3CHAN       
+05D9'	PLAY3DRUM       0457'	PLAY3NOTE       4683'	PLBRW           
+4660'	PLBT            4690'	PLCAM           46B2'	PLCTFS          
+467A'	PLEL            466D'	PLEXPL          469D'	PLGAMO          
+462C'	PLMUSIC         0B0D'	PLOT            46BF'	PLSH            
+3321'	PLSHOT          2172'	PLX             2173'	PLY             
+202C'	PMASRND         001B 	POINTS0         20E4'	POWER           
+21C3'	POWERS          0A4C'	PT16U           3A9D'	PTS0            
+3AEE'	PTS01           3B42'	PTS1            3B4D'	PTS2            
+3B51'	PTS3            3BD7'	PTS5            3BF2'	PTS6            
+0BE6'	PUC1            0BEA'	PUC2            0866'	PUT16X16        
+0AAA'	PUT16X16D       0A49'	PUT16X16U       38FD'	PUT1INV         
+3919'	PUT1LIV         38F8'	PUT1T1          3914'	PUT1T2          
+3936'	PUT1T3          3813'	PUT2ARMOR       3854'	PUT2INV         
+3870'	PUT2LIV         384F'	PUT2T1          386B'	PUT2T2          
+388D'	PUT2T3          267A'	PUT8IN0         2659'	PUT8INMAP1      
+090F'	PUT8X8          094D'	PUT8X8X         389D'	PUTA3           
+39A0'	PUTA4           388F'	PUTA5           38C8'	PUTA6           
+397C'	PUTA7           3938'	PUTA8           2518'	PUTALLOBJ       
+3940'	PUTARMOR        3964'	PUTARX          3972'	PUTARX1         
+452C'	PUTAU1          44FA'	PUTAUNIT        0D2C'	PUTBYTE         
+0D0F'	PUTCIF          39C5'	PUTD0           39D8'	PUTD1           
+39E7'	PUTD10          39FB'	PUTD2           3A10'	PUTD3           
+3A25'	PUTD4           3A45'	PUTD5           3A68'	PUTD7           
+39A3'	PUTDEMON        455D'	PUTDU1          455A'	PUTDUNIT        
+378C'	PUTGD0          37EC'	PUTGD5          37F9'	PUTGD6          
+37EB'	PUTGDE          3785'	PUTGDW          26AC'	PUTINMAP        
+262C'	PUTINMAP1       23C4'	PUTL2           23C6'	PUTL3           
+23B9'	PUTLEVEL        24A5'	PUTOBJ          23E3'	PUTSCHAR        
+2415'	PUTSO0          2446'	PUTSO1          0D3B'	PUTST0          
+0D50'	PUTST1          3A92'	PUTSTAT         24EB'	PUTSTOBJ        
+0D39'	PUTSTRING       0BC9'	PUTUCHAR        4532'	PUTUNIT         
+0CE6'	PUTWORD         0020 	QBANK           3A6A'	RAMA1           
+3A7E'	RAMA2           3A69'	RAMKA           20E9'	RANGE           
+0224'	RE              0BAC'	RECT            022E'	REDIEZ          
+0040 	RIGHT           2F39'	RMOVEM          2B7C'	RMT0            
+2B9F'	RMT1            2BD1'	RMT3            2C0A'	RMT4            
+2C4A'	RMT50           2C54'	RMT6            2C9E'	RMT66           
+2CA5'	RMT7            2CC3'	RMT8            3CC5'	RUSE            
+43D0'	RUSPR           2D08'	SAVEDSPCOOR     0CFF'	SBYTE           
+36C8'	SCRDOWN         368E'	SCRL1           01D5'	SCROLL          
+367F'	SCROLLLEVEL     369C'	SCRUP           35D1'	SERVETURRET     
+052B'	SET1DRUM        0507'	SET1MODE        04EF'	SET1PAUSE       
+056D'	SET2DRUM        0513'	SET2MODE        04F7'	SET2PAUSE       
+05AF'	SET3DRUM        051F'	SET3MODE        04FF'	SET3PAUSE       
+02A0'	SETADDRNOTE     0B56'	SETC0           0B62'	SETC1           
+0B67'	SETC2           0B71'	SETC3           0CF3'	SETCIF          
+	MSX.M-80 1.00	01-Apr-85	PAGE	S-4
+
+
+0B44'	SETCOLOR        0C7D'	SETCURS         3487'	SETF1           
+347B'	SETFLAG         2377'	SETMAN          43FA'	SETMAX          
+21B3'	SHIFTS          20E5'	SHTM            027E'	SI              
+0274'	SIBEMOL         2FE1'	SITINTANK       3075'	SITIT3          
+06AC'	SKEYNAMES       067F'	SNUMPL1         0690'	SNUMPL2         
+0256'	SOL             0260'	SOLDIEZ         46CC'	SOUEFFAD        
+46DA'	SOUEFFLEN       20E7'	SPEED           21C7'	SPEEDS          
+069B'	SPRKEY          35DA'	SRVT1           3630'	SRVT9           
+4253'	STARTDEMO       4037'	STARTGAME       2155'	STARXY          
+237F'	STM1            238C'	STMPL1          2120'	STOBJXY         
+0014 	STOLB           31CD'	STOPBULL        2F84'	STOPMAN         
+36C3'	STOPSCR         2F8D'	STOPTANK        3634'	STOREPOS        
+3639'	STPOS0          3676'	STPOS5          2147'	STWALLXY        
+1800 	TABL2SYM        2000 	TABLCOLSYM      1000 	TABLSYM         
+439D'	TABPR           217B'	TABTANK         0CBD'	TABX            
+206D'	TANKS           4209'	TANKSTR         0D05'	TBYTE           
+20EA'	TCODE           3F32'	TECLR           3F38'	TECLR1          
+01EA'	TIMER           20E9'	TIMEROBJ        2099'	TPXY            
+43D6'	TRYNL           43ED'	TRYNL1          0CB0'	TWOCIFR         
+20E3'	TYPE            43F6'	TYPENL1         2082'	UKAZ            
+0080 	UP              4378'	USPR            4386'	USPR1           
+0B92'	VHL0            0BA8'	VHL1            0B74'	VHLINE          
+20DB'	VID             21CF'	VIDS            0204'	WAVE1           
+0205'	WAVE2           0206'	WAVE3           0B35'	WHCOL           
+49E7'	WHISP1          4AA8'	WHISP2          4B69'	WHISP3          
+0865'	WHPL            20E4'	WTYPE           0B73'	XCOLOR          
+2141'	XDSP            20E1'	XSHIFT          2076'	YBASE           
+20EC'	YBON            01EC'	YCHAN1          01ED'	YCHAN2          
+01EE'	YCHAN3          207C'	YDEMO           01EF'	YNOTE1          
+01F0'	YNOTE2          01F1'	YNOTE3          2085'	YSOUND          
+
+
+
+No Fatal error(s)
